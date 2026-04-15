@@ -25,6 +25,7 @@ setup(
     entry_points={
         'console_scripts': [
                 'cmd_vel_2_mqtt = luloc_pkg_py.cmd_vel_2_mqtt:main',
+                'ros_msg_2_mqtt = luloc_pkg_py.ros_msg_2_mqtt:main',
         ],
     },
 )
