@@ -26,6 +26,7 @@ setup(
         'console_scripts': [
                 'cmd_vel_2_mqtt = luloc_pkg_py.cmd_vel_2_mqtt:main',
                 'ros_msg_2_mqtt = luloc_pkg_py.ros_msg_2_mqtt:main',
+                'lectura_imu = luloc_pkg_py.lectura_imu:main',
         ],
     },
 )
