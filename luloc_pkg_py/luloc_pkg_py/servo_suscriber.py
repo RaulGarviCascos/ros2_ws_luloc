@@ -15,7 +15,7 @@ sensor_sup = Button(27, pull_up=False)
 
 vel = 0.3
 
-class Servo(Node):
+class ROS2ServoSubscriber(Node):
     def __init__(self):
         super().__init__("servo_suscriber")
         self.subscription_ = self.create_subscription(
