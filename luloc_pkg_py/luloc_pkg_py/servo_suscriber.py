@@ -1,54 +1,64 @@
 import os
 os.environ['GPIOZERO_PIN_FACTORY'] = 'lgpio'
-from gpiozero import Servo, Button
-from time import sleep, time
+
 import sys
 import rclpy
 from rclpy.node import Node
 from std_msgs.msg import Float32
+from gpiozero import Servo, Button
 
-
+# Inicialización de hardware
 servo = Servo(12, min_pulse_width=0.5/1000, max_pulse_width=2.5/1000)
 sensor_inf = Button(17, pull_up=False) 
 sensor_sup = Button(27, pull_up=False)
 
 servo.detach()
 
-vel = 0.3
-
 class ROS2ServoSubscriber(Node):
     def __init__(self):
         super().__init__("servo_suscriber")
+        
+        # Variable interna para guardar la última velocidad solicitada
+        self.target_vel = 0.0
+        
+        # 1. Suscriptor: Solo escucha y guarda el valor
         self.subscription_ = self.create_subscription(
             Float32,
             "robot/servo_vel",
             self.calback_servo,
             10
         )
-        self.get_logger().info("Listener servo has been started")
+        
+        self.timer_period = 0.005  
+        self.security_timer = self.create_timer(self.timer_period, self.check_security_loop)
+        
+        self.get_logger().info("Nodo iniciado: Suscriptor y bucle de seguridad a 50Hz activos.")
 
     def calback_servo(self, msg: Float32):
+        self.target_vel = float(msg.data)
+
+    def check_security_loop(self):
         puls_inf = sensor_inf.is_pressed
         puls_sup = not sensor_sup.is_pressed
-        vel = float(msg.data)
-
-        if vel <0:                  #si es menor que cero es que quiere bajar
-            if puls_inf:
-                servo.value = vel
-                self.get_logger().info(f"Muevo servo con vel {vel}")
+        
+        if self.target_vel < 0:  
+            if not puls_inf:
+                servo.value = self.target_vel
             else:
-                self.get_logger().info(f"Final de carrera de BAJADA no pulsado (paro)")
+                self.get_logger().warn("¡EMERGENCIA! Final de carrera INFERIOR activado. Parando.", throttle_duration_sec=1.0)
                 servo.detach()
-        elif vel>0:                       #si es mayor que cero es que quiere subir
+                self.target_vel = 0.0  
+                
+        elif self.target_vel > 0:  
             if not puls_sup:
-                servo.value = vel
-                self.get_logger().info(f"Muevo servo con vel {vel}")
+                servo.value = self.target_vel
             else:
-                self.get_logger().info(f"Final de carrera de SUBIDA pulsado (paro)")
+                self.get_logger().warn("¡EMERGENCIA! Final de carrera SUPERIOR activado. Parando.", throttle_duration_sec=1.0)
                 servo.detach()
+                self.target_vel = 0.0
+                
         else:
             servo.detach()
-       
 
 def main(args=None):
     rclpy.init(args=args)
