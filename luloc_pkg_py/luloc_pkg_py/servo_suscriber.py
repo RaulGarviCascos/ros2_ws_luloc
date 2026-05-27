@@ -37,12 +37,14 @@ class ROS2ServoSubscriber(Node):
                 servo.value = vel
                 self.get_logger().info(f"Muevo servo con vel {vel}")
             else:
+                self.get_logger().info(f"Final de carrera de BAJADA no pulsado (paro)")
                 servo.detach()
         elif vel>0:                       #si es mayor que cero es que quiere subir
             if not puls_sup:
                 servo.value = vel
                 self.get_logger().info(f"Muevo servo con vel {vel}")
             else:
+                self.get_logger().info(f"Final de carrera de SUBIDA pulsado (paro)")
                 servo.detach()
         else:
             servo.detach()
