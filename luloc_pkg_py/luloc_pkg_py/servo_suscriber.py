@@ -31,10 +31,11 @@ class ROS2ServoSubscriber(Node):
         puls_inf = sensor_inf.is_pressed
         puls_sup = not sensor_sup.is_pressed
         vel = float(msg.data)
-        if not puls_inf or not puls_sup:
-            if vel == 0:
+        if not puls_inf and not puls_sup:
+            if vel == 0.0:
                 servo.detach()
-            servo.value = vel
+            else:
+                servo.value = vel
             self.get_logger().info(f"Muevo servo con vel {vel}")
         else:
             servo.detach()
