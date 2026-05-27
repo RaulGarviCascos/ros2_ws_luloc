@@ -35,6 +35,7 @@ class ROS2ServoSubscriber(Node):
             if vel == 0:
                 servo.detach()
             servo.value = vel
+            self.get_logger().info(f"Muevo servo con vel {vel}")
         else:
             servo.detach()
 
