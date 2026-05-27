@@ -6,6 +6,7 @@ import sys
 from rclpy.node import Node
 from std_msgs.msg import Float32
 from enum import IntEnum
+import rclpy
 
 
 servo = Servo(12, min_pulse_width=0.5/1000, max_pulse_width=2.5/1000)
@@ -41,7 +42,7 @@ class ROS2ServoSubscriber(Node):
 
 def main(args=None):
     rclpy.init(args=args)
-    node = Servo()
+    node = ROS2ServoSubscriber()
     try:
         rclpy.spin(node)
     finally:
