@@ -42,10 +42,10 @@ class ROS2ServoSubscriber(Node):
         puls_sup = not sensor_sup.is_pressed
         
         if self.target_vel < 0:  
-            if not puls_inf:
+            if puls_inf:
                 servo.value = self.target_vel
             else:
-                self.get_logger().warn("¡EMERGENCIA! Final de carrera INFERIOR activado. Parando.", throttle_duration_sec=1.0)
+                self.get_logger().warn("¡EMERGENCIA! Final de carrera INFERIOR no activado. Parando.", throttle_duration_sec=1.0)
                 servo.detach()
                 self.target_vel = 0.0  
                 
