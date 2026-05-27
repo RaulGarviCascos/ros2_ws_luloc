@@ -21,7 +21,7 @@ class ROS2ServoSubscriber(Node):
         super().__init__("servo_suscriber")
         self.subscription_ = self.create_subscription(
             Float32,
-            "/robot/servo_vel",
+            "robot/servo_vel",
             self.calback_servo,
             10
         )
