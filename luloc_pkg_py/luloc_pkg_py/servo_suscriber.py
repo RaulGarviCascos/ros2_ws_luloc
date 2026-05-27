@@ -31,14 +31,22 @@ class ROS2ServoSubscriber(Node):
         puls_inf = sensor_inf.is_pressed
         puls_sup = not sensor_sup.is_pressed
         vel = float(msg.data)
-        if not puls_inf and not puls_sup:
-            if vel == 0.0:
-                servo.detach()
-            else:
+
+        if vel <0:                  #si es menor que cero es que quiere bajar
+            if puls_inf:
                 servo.value = vel
-            self.get_logger().info(f"Muevo servo con vel {vel}")
+                self.get_logger().info(f"Muevo servo con vel {vel}")
+            else:
+                servo.detach()
+        elif vel>0:                       #si es mayor que cero es que quiere subir
+            if not puls_sup:
+                servo.value = vel
+                self.get_logger().info(f"Muevo servo con vel {vel}")
+            else:
+                servo.detach()
         else:
             servo.detach()
+       
 
 def main(args=None):
     rclpy.init(args=args)
