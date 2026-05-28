@@ -183,7 +183,7 @@ def run_ros2_loop():
     ros2_node.destroy_node()
     rclpy.shutdown()
 
-if __name__ == "__main__":
+def main(args=None):
     ros_thread = threading.Thread(target=run_ros2_loop, daemon=True)
     ros_thread.start()
 
@@ -191,3 +191,6 @@ if __name__ == "__main__":
         app.run(host="0.0.0.0", port=8080, threaded=True)
     finally:
         picam2.stop()
+
+if __name__ == "__main__":
+    main()
