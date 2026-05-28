@@ -89,9 +89,10 @@ class ROS2ConfigCam(Node):
         except IOError:
             font = ImageFont.load_default()
         
-        shape = new_img.shape
+        # --- FIX: Corrección del TypeError para tuplas en Python ---
+        alto_imagen = new_img.shape[0]
         n_partes_image = 17
-        tam_parte = shape // n_partes_image
+        tam_parte = alto_imagen // n_partes_image
         fin_parte = tam_parte
         origen_image = 0
         r = 4  
