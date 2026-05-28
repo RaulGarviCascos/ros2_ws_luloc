@@ -64,10 +64,10 @@ class ROS2ConfigCam(Node):
 
         resultado = np.repeat(resultado[:, :, None], 3, axis=2)
         
-        puntos = [[325, 242],
-            [262, 467],
-            [569, 467],
-            [523, 240]]
+        puntos = [[314, 143],
+            [279, 394],
+            [551, 394],
+            [470, 136]]
         pts1 = np.float32(puntos)
         pts2 = np.float32([[0,0],[0,OUT_W],[OUT_H,OUT_W],[OUT_H,0]])
         
