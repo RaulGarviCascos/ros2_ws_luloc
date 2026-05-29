@@ -206,10 +206,10 @@ def snapshot():
     """
     Endpoint dedicado para Unity: Retorna un JPG instantáneo bajo demanda.
     """
-    if ros2_node.current_mode == 1:
-        jpg = ros2_node.feedforward_frames()
-    else:
+    if ros2_node.current_mode == 3:
         jpg = ros2_node.nomal_frames()
+    elif ros2_node.current_mode == 1 :
+        jpg = ros2_node.feedforward_frames()
     return Response(jpg, mimetype="image/jpeg")
 
 # ---------------- Hilos y Ejecución ----------------
